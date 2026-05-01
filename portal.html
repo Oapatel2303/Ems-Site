@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Employee Portal | Seasons RP EMS</title>
+    <link rel="icon" type="image/svg+xml" href="favicon.svg">
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body class="dashboard-body">
+
+    <nav class="main-nav">
+        <div class="nav-logo">🚑 Seasons EMS</div>
+        
+    
+        <ul class="nav-links">
+            <li><a href="index.html">Home</a></li>
+        </ul>
+    </nav>
+    
+    <div id="login-view" class="login-box-container">
+        <a href="index.html" class="back-home-link">← Return to Home</a>
+        <div class="login-box">
+            <h2>Employee Portal</h2>
+            <form id="employee-login-form">
+                <div class="form-group">
+                    <label>Discord ID (e.g., o__paz)</label>
+                    <input type="text" id="discord-input" required>
+                </div>
+                <div class="form-group">
+                    <label>Callsign PIN (Numbers Only)</label>
+                    <input type="password" id="pin-input" required>
+                </div>
+                <button type="submit" class="submit-btn">Secure Login</button>
+            </form>
+        </div>
+    </div>
+
+    <div id="dashboard-view" style="display: none;">
+        <div class="portal-wrapper">
+            
+            <nav class="portal-sidebar">
+                <div class="sidebar-header">
+                    <h3 style="color: #d32f2f; margin-bottom: 0;">Seasons EMS</h3>
+                    <p style="color: #666; font-size: 0.8rem; margin-top: 5px;">Employee Portal</p>
+                </div>
+                <ul class="nav-links">
+                    <li class="active" id="nav-hub"><i class="fas fa-graduation-cap"></i> Academy Hub</li>
+                    <li id="nav-certs"><i class="fas fa-file-medical" style="cursor: pointer;"></i> My Certs</li>
+                    <li id="nav-pcr"><i class="fas fa-clipboard-list"></i> PCR Form</li>
+                    <li id="nav-rx"><i class="fas fa-pills"></i> Rx Tracker</li>
+                </ul>
+
+                <div class="sidebar-footer" style="margin-top: auto; padding-top: 20px; border-top: 1px solid #222;">
+                    <p style="color: #aaa; font-size: 0.9rem; margin-bottom: 10px;">Logged in as:</p>
+                    <p id="employee-name-display" style="font-weight: bold; color: white; margin-bottom: 15px;">Medic</p>
+                    <button class="btn-logout" style="width: 100%; padding: 10px; background: #333; color: white; border: none; border-radius: 5px; cursor: pointer;">Logout</button>
+                </div>
+            </nav>
+
+            <main class="portal-main">
+                
+                <div id="hub-menu" class="hub-container">
+                    <div class="welcome-banner">
+                        <h2 style="color: #888; font-weight: 400; margin-bottom: 5px;">Welcome back,</h2>
+                        <h1 id="welcome-name" style="font-size: 2.5rem; margin-bottom: 30px;">Medic</h1>
+                        <hr style="border: 0; border-top: 1px solid #222; margin-bottom: 40px;">
+                        <h3 style="color: #d32f2f; text-transform: uppercase; letter-spacing: 2px; font-size: 0.9rem;">Academy Training Center</h3>
+                        <p style="color: #aaa;">Ensure your certifications are up to date to maintain active status.</p>
+                    </div>
+
+                    <div class="dashboard-grid">
+                        <div class="portal-card">
+                            <div class="card-icon red"><i class="fas fa-briefcase-medical"></i></div>
+                            <h3>BLS Certification</h3>
+                            <p>Core medical knowledge test. Required for all field personnel.</p>
+                            <button id="start-exam-btn" class="btn-primary" style="width: 100%; margin-top: 15px;">Begin Examination</button>
+                        </div>
+
+                        <div class="portal-card disabled">
+                            <div class="card-icon gold"><i class="fas fa-ambulance"></i></div>
+                            <h3>EVOC Training</h3>
+                            <p>Advanced vehicle operations. Currently under revision.</p>
+                            <span class="badge">Locked</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="exam-container" style="display: none; width: 100%; max-width: 800px; margin: 0 auto;">
+                    <div class="exam-header" style="margin-bottom: 30px; border-bottom: 2px solid #d32f2f; padding-bottom: 15px;">
+                        <h2>Basic Life Support Exam</h2>
+                        <p style="color: #888;">Score 80% or higher to pass.</p>
+                    </div>
+                    <form id="exam-form">
+                        <div id="question-list"></div>
+                        <button type="submit" id="submit-exam-btn" class="btn-submit">Submit Final Answers</button>
+                    </form>
+                </div>
+
+                <div id="view-my-certs" style="display: none; width: 100%; max-width: 1200px;">
+                    <div style="margin-bottom: 2rem;">
+                        <h2 style="color: #fff; margin-bottom: 0.5rem;">SPECIALIZED CERTIFICATIONS</h2>
+                        <p style="color: #888;">View your active unit certifications and department heads.</p>
+                    </div>
+                    <div class="cards-grid" id="certs-container">
+                        </div>
+                </div>
+
+                <div id="pcr-container" style="display: none; width: 100%; max-width: 1000px;">
+                    <div class="exam-header" style="margin-bottom: 30px; border-bottom: 2px solid #d32f2f; padding-bottom: 15px;">
+                        <h2>Elite EMS Patient Care Report (ePCR)</h2>
+                    </div>
+
+                    <form id="pcr-form" class="admin-panel">
+                        <h3 style="color: #d32f2f;">Incident & Patient Info</h3>
+                        <div class="form-grid">
+                            <input type="date" id="pcr-date" required>
+                            <input type="text" id="pcr-location" placeholder="Location" required>
+                            <input type="text" id="pcr-priority" placeholder="Priority (1-3)" required>
+                            <input type="text" id="pcr-patient" placeholder="Patient Name" required>
+                            <input type="text" id="pcr-dob" placeholder="DOB or Age">
+                            <input type="text" id="pcr-allergies" placeholder="Known Allergies">
+                        </div>
+
+                        <h3 style="color: #d32f2f; margin-top: 20px;">GCS Breakdown</h3>
+                        <div class="form-grid">
+                            <select id="gcs-eyes" class="gcs-calc">
+                                <option value="4">Eyes: 4 - Normal</option>
+                                <option value="3">Eyes: 3 - To Voice</option>
+                                <option value="2">Eyes: 2 - To Pain</option>
+                                <option value="1">Eyes: 1 - None</option>
+                            </select>
+                            <select id="gcs-verbal" class="gcs-calc">
+                                <option value="5">Verbal: 5 - Oriented</option>
+                                <option value="4">Verbal: 4 - Confused</option>
+                                <option value="3">Verbal: 3 - Inappropriate</option>
+                                <option value="2">Verbal: 2 - Incomprehensible</option>
+                                <option value="1">Verbal: 1 - None</option>
+                            </select>
+                            <select id="gcs-motor" class="gcs-calc">
+                                <option value="6">Motor: 6 - Obeys Command</option>
+                                <option value="5">Motor: 5 - Localizes Pain</option>
+                                <option value="4">Motor: 4 - Withdraws</option>
+                                <option value="3">Motor: 3 - Flexion</option>
+                                <option value="2">Motor: 2 - Extension</option>
+                                <option value="1">Motor: 1 - None</option>
+                            </select>
+                            <div class="gcs-total-box">
+                                <strong style="color: #fb8c00;">Total GCS: <span id="gcs-total">15</span></strong>
+                            </div>
+                        </div>
+
+                        <h3 style="color: #d32f2f; margin-top: 20px;">Body Diagram (Click to mark injuries)</h3>
+                        <div class="body-diagram-container">
+                            <img id="body-image" alt="Body Diagram" style="width: 100%; opacity: 0.8; display: block;" src="data:image/svg+xml;utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 200' fill='none' stroke='%23666' stroke-width='2'%3E%3Ctext x='50' y='20' fill='%23666' font-family='sans-serif' font-size='12' text-anchor='middle' stroke='none'%3EFRONT%3C/text%3E%3Ccircle cx='50' cy='40' r='12'/%3E%3Cpath d='M30 60 Q50 50 70 60 L75 110 L65 110 L60 180 L40 180 L35 110 L25 110 Z'/%3E%3Cline x1='50' y1='110' x2='50' y2='180'/%3E%3Ctext x='150' y='20' fill='%23666' font-family='sans-serif' font-size='12' text-anchor='middle' stroke='none'%3EBACK%3C/text%3E%3Ccircle cx='150' cy='40' r='12'/%3E%3Cpath d='M130 60 Q150 50 170 60 L175 110 L165 110 L160 180 L140 180 L135 110 L125 110 Z'/%3E%3Cline x1='150' y1='110' x2='150' y2='180'/%3E%3C/svg%3E">
+                            <canvas id="body-canvas"></canvas>
+                        </div>
+                        <button type="button" id="clear-canvas-btn" class="btn-secondary" style="margin-bottom: 20px;">Clear Injuries</button>
+
+                        <h3 style="color: #d32f2f;">Narrative & Sign-off</h3>
+                        <textarea id="pcr-narrative" placeholder="Detailed incident report..." rows="5" style="width: 100%; background: #0a0a0a; color: white; border: 1px solid #333; padding: 10px; border-radius: 6px;" required></textarea>
+                        
+                        <div style="margin-top: 15px; padding: 15px; background: #1a1a1a; border-radius: 6px;">
+                            <p style="color: #aaa; margin-bottom: 5px;">Digitally Signed By (Primary Crew):</p>
+                            <strong id="pcr-signature" style="color: #fb8c00; font-size: 1.2rem;">Pending Login...</strong>
+                        </div>
+
+                        <button type="submit" class="btn-primary" style="width: 100%; margin-top: 20px; padding: 15px;">Submit Official ePCR</button>
+                    </form>
+                </div>
+
+                <div id="rx-container" style="display: none; width: 100%; max-width: 1200px;">
+                    <div class="exam-header" style="margin-bottom: 30px; border-bottom: 2px solid #d32f2f; padding-bottom: 15px; display: flex; justify-content: space-between; align-items: center;">
+                        <div>
+                            <h2>Prescription Database</h2>
+                            <p style="color: #888;">Manage active patient prescriptions.</p>
+                        </div>
+                        <button id="add-rx-btn" class="btn-primary" style="padding: 10px 20px;">+ New Prescription</button>
+                    </div>
+
+                    <div id="rx-form-container" class="admin-panel" style="display: none; margin: 0 0 30px 0;">
+                        <h3 id="rx-form-title">Add New Prescription</h3>
+                        <form id="rx-form">
+                            <input type="hidden" id="rx-id"> 
+                            <div class="roster-form form-grid">
+                                <input type="text" id="rx-patient" placeholder="Patient Name" required>
+                                <input type="text" id="rx-medication" placeholder="Medication (e.g., Vicodin)" required>
+                                <input type="text" id="rx-dosage" placeholder="Dosage (e.g., 500mg)" required>
+                                <input type="number" id="rx-refills" placeholder="Refills Remaining" required min="0">
+                                <input type="text" id="rx-doctor" placeholder="Prescribing Doctor" required>
+                            </div>
+                            <div class="form-footer">
+                                <button type="button" id="cancel-rx-btn" class="btn-secondary" style="padding: 10px 20px;">Cancel</button>
+                                <button type="submit" class="btn-primary" style="padding: 10px 20px;">Save Prescription</button>
+                            </div>
+                        </form>
+                    </div>
+
+                    <div style="margin-bottom: 15px;">
+                        <input type="text" id="rx-search" placeholder="Search patient, medication, or doctor..." style="padding: 10px 15px; border-radius: 6px; border: 1px solid #333; background: #0a0a0a; color: white; width: 100%; max-width: 300px;">
+                    </div>
+                    
+                    <div class="table-responsive">
+                        <table class="admin-table">
+                            <thead>
+                                <tr>
+                                    <th>Patient</th>
+                                    <th>Medication</th>
+                                    <th>Dosage</th>
+                                    <th>Refills</th>
+                                    <th>Doctor</th>
+                                    <th>Date Issued</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="rx-table-body">
+                                </tbody>
+                        </table>
+                    </div>
+                </div>
+                
+            </main>
+        </div>
+    </div>
+
+    <script type="module" src="portal.js"></script>
+</body>
+</html>

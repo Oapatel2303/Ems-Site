@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Public Roster | Seasons RP EMS</title>
+    <link rel="icon" type="image/svg+xml" href="favicon.svg">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <nav class="main-nav">
+        <div class="nav-logo">🚑 Seasons EMS</div>
+        
+        <button class="mobile-menu-btn">☰</button>
+
+        <ul class="nav-links">
+            <li><a href="index.html">Home</a></li>
+            <li><a href="apply.html">Apply Now</a></li>
+            <li><a href="sops.html">SOP Library</a></li>
+            <li><a href="roster.html">Public Roster</a></li>
+            <li><a href="gallery.html">Showcase</a></li>
+            <li><a href="command.html" class="login-link">Command Login</a></li>
+        </ul>
+    </nav>
+
+    <header class="home-hero" style="height: 40vh; min-height: 300px;">
+        <div class="hero-content">
+            <h1>Active Personnel</h1>
+            <p>The dedicated men and women protecting the citizens of San Andreas.</p>
+        </div>
+    </header>
+
+    <main class="container" style="max-width: 1200px; padding: 4rem 2rem;">
+        
+        <div class="roster-filters">
+            <button class="filter-btn active" data-filter="all">All Personnel</button>
+            <button class="filter-btn" data-filter="High Command">High Command</button>
+            <button class="filter-btn" data-filter="Shift Lead">Shift Leads</button>
+            <button class="filter-btn" data-filter="Paramedic">Paramedics</button>
+            <button class="filter-btn" data-filter="EMT">EMTs</button>
+        </div>
+
+        <div id="roster-grid" class="roster-grid">
+            <p style="text-align: center; color: #888; width: 100%;">Loading secure roster data...</p>
+        </div>
+
+   </main>
+
+    <script>
+        const menuBtn = document.querySelector('.mobile-menu-btn');
+        const navLinks = document.querySelector('.nav-links');
+
+        menuBtn.addEventListener('click', () => {
+            navLinks.classList.toggle('show-menu');
+            if (navLinks.classList.contains('show-menu')) {
+                menuBtn.innerHTML = '✕';
+            } else {
+                menuBtn.innerHTML = '☰';
+            }
+        });
+    </script>
+    
+    <script type="module" src="roster.js"></script>
+
+</body>
+</html>

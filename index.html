@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Home | Seasons RP EMS</title>
+    <link rel="icon" type="image/svg+xml" href="favicon.svg">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <nav class="main-nav">
+        <div class="nav-logo">🚑 Seasons EMS</div>
+        
+        <button class="mobile-menu-btn">☰</button>
+
+        <ul class="nav-links">
+            <li><a href="index.html">Home</a></li>
+            <li><a href="apply.html">Apply Now</a></li>
+            <li><a href="sops.html">SOP Library</a></li>
+            <li><a href="roster.html">Public Roster</a></li>
+            <li><a href="gallery.html">Showcase</a></li>
+            <li><a href="portal.html" class="login-link">Employee Portal</a></li>
+            <li><a href="command.html" class="login-link">Command Login</a></li>
+        </ul>
+    </nav>
+
+    <header class="home-hero">
+        <div class="hero-content">
+            <h1>Welcome to Seasons RP EMS</h1>
+            <p>Dedicated to preserving life, protecting the city, and providing top-tier medical roleplay. Are you ready to answer the call?</p>
+            <div class="hero-buttons">
+                <a href="apply.html" class="btn-primary">Submit Application</a>
+                <a href="#about" class="btn-secondary">Learn More</a>
+            </div>
+        </div>
+    </header>
+
+    <section id="about" class="info-section">
+        <div class="container">
+            <h2>About Our Division</h2>
+            <p>We hold our medics to the highest standard of roleplay. Whether you are responding to a traffic collision on the highway or a critical incident at Mount Chiliad, you are expected to operate with professionalism, quick thinking, and strict adherence to standard operating procedures.</p>
+        </div>
+    </section>
+
+    <script>
+        // The Hamburger Menu
+        const menuBtn = document.querySelector('.mobile-menu-btn');
+        const navLinks = document.querySelector('.nav-links');
+
+        menuBtn.addEventListener('click', () => {
+            navLinks.classList.toggle('show-menu');
+            
+            if (navLinks.classList.contains('show-menu')) {
+                menuBtn.innerHTML = '✕';
+            } else {
+                menuBtn.innerHTML = '☰';
+            }
+        });
+    </script>
+</body>
+</html>

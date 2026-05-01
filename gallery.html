@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Media Showcase | Seasons RP EMS</title>
+    <link rel="icon" type="image/svg+xml" href="favicon.svg">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <nav class="main-nav">
+        <div class="nav-logo">🚑 Seasons EMS</div>
+        
+        <button class="mobile-menu-btn">☰</button>
+
+        <ul class="nav-links">
+            <li><a href="index.html">Home</a></li>
+            <li><a href="apply.html">Apply Now</a></li>
+            <li><a href="sops.html">SOP Library</a></li>
+            <li><a href="roster.html">Public Roster</a></li>
+            <li><a href="gallery.html">Showcase</a></li>
+            <li><a href="command.html" class="login-link">Command Login</a></li>
+        </ul>
+    </nav>
+
+    <header class="home-hero" style="height: 40vh; min-height: 300px;">
+        <div class="hero-content">
+            <h1>Media Showcase</h1>
+            <p>On the frontlines. View recent operations, training exercises, and our active fleet.</p>
+        </div>
+    </header>
+
+    <main class="container" style="max-width: 1400px; padding: 4rem 2rem;">
+        <div class="gallery-grid" id="gallery-grid">
+
+            <!-- NEW IMAGE <div class="gallery-item">
+                <img src="assets/.jpg" alt="">
+            </div> -->
+
+            <div class="gallery-item">
+                <img src="assets/night.png" alt="Night Skies from Pillbox">
+            </div>
+
+            <div class="gallery-item">
+                <img src="assets/bobby.png" alt="Super Bobby">
+            </div>
+
+            <div class="gallery-item">
+                <img src="assets/3 breasties.jpg" alt="The 3 Breasties">
+            </div>
+
+            <div class="gallery-item">
+                <img src="assets/ems love.png" alt="EMS Love">
+            </div>
+
+            <div class="gallery-item">
+                <img src="assets/day at pillbox.png" alt="A Day at Pillbox">
+            </div>
+
+            <div class="gallery-item">
+                <img src="assets/teaching.jpg" alt="Teaching the Next Generation">
+            </div>
+
+            <div class="gallery-item">
+                <img src="assets/skies.png" alt="Los Santos Skies">
+            </div>
+
+            <div class="gallery-item">
+                <img src="assets/flight training.jpg" alt="Flight Training">
+            </div>
+
+            <div class="gallery-item">
+                <img src="assets/lonely.jpg" alt="Lonely Ranger">
+            </div>
+
+            <div class="gallery-item">
+                <img src="assets/purgatory.png" alt="Purgatory">
+            </div>
+
+            <div class="gallery-item">
+                <img src="assets/yellow jack.jpg" alt="Supporting Local Businesses">
+            </div>
+
+            <div class="gallery-item">
+                <img src="assets/ems fleet.jpg" alt="EMS Fleet">
+            </div>
+
+            <div class="gallery-item">
+                <img src="assets/ems.png" alt="EMS Operations">
+            </div>
+
+        </div>
+    </main>
+
+    <div id="lightbox" class="lightbox">
+        <span class="lightbox-close">&times;</span>
+        <img class="lightbox-content" id="lightbox-img">
+    </div>
+
+    <script>
+        const menuBtn = document.querySelector('.mobile-menu-btn');
+        const navLinks = document.querySelector('.nav-links');
+
+        menuBtn.addEventListener('click', () => {
+            navLinks.classList.toggle('show-menu');
+            if (navLinks.classList.contains('show-menu')) {
+                menuBtn.innerHTML = '✕';
+            } else {
+                menuBtn.innerHTML = '☰';
+            }
+        });
+    </script>
+
+    <script src="gallery.js"></script>
+</body>
+</html>

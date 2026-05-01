@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EMS Application | Seasons RP</title>
+    <link rel="icon" type="image/svg+xml" href="favicon.svg">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <nav class="main-nav">
+        <div class="nav-logo">🚑 Seasons EMS</div>
+        
+        <button class="mobile-menu-btn">☰</button>
+
+        <ul class="nav-links">
+            <li><a href="index.html">Home</a></li>
+            <li><a href="apply.html">Apply Now</a></li>
+            <li><a href="sops.html">SOP Library</a></li>
+            <li><a href="roster.html">Public Roster</a></li>
+            <li><a href="gallery.html">Showcase</a></li>
+            <li><a href="command.html" class="login-link">Command Login</a></li>
+        </ul>
+    </nav>
+
+    <header class="hero">
+        <h1>Seasons RP | Emergency Medical Services</h1>
+        <p>Protecting the city, one call at a time. Apply to join the roster today.</p>
+    </header>
+
+    <main class="container">
+        <section class="form-card">
+            <h2>Official EMS Application</h2>
+            
+            <form id="ems-app-form">
+                
+                <div class="form-group">
+                    <label>Discord Username *</label>
+                    <input type="text" name="discordName" placeholder="e.g., o__paz" required>
+                </div>
+
+                <div class="form-group">
+                    <label>Discord Developer ID *</label>
+                    <input type="number" name="discordId" placeholder="e.g., 712998937665208420" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="timezone">What is your time zone? *</label>
+                    <input type="text" id="timezone" name="timezone" placeholder="e.g., EST, PST, GMT" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="characterName">What is your character's full name? *</label>
+                    <input type="text" id="characterName" name="characterName" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="irlAge">How old are you? (IRL, Not in character) *</label>
+                    <input type="number" id="irlAge" name="irlAge" min="1" required>
+                </div>
+
+                <div class="form-group">
+                    <p class="question-label">To the best of your knowledge do you have any criminal record and or Warrant for arrest or association with criminal gangs/activity? *</p>
+                    <div class="custom-radio-group">
+                        <label class="custom-radio">
+                            <input type="radio" name="criminalRecord" value="Yes" required>
+                            <span class="radio-card">Yes</span>
+                        </label>
+                        
+                        <label class="custom-radio">
+                            <input type="radio" name="criminalRecord" value="No">
+                            <span class="radio-card">No</span>
+                        </label>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="playtime">How many hours do you have in Seasons RP? How active do you think you can be each week? *</label>
+                    <textarea id="playtime" name="playtime" rows="3" required></textarea>
+                </div>
+
+                <div class="form-group">
+                    <label for="warnings">Have you ever received warnings, kicks or bans on Seasons RP? If yes, please explain. *</label>
+                    <textarea id="warnings" name="warnings" rows="3" required></textarea>
+                </div>
+
+                <div class="form-group">
+                    <label for="experience">Do you have any EMS experience, either in real life or other cities? *</label>
+                    <textarea id="experience" name="experience" rows="3" required></textarea>
+                </div>
+
+                <div class="form-group">
+                    <label for="whyJoin">Why do you want to join EMS? *</label>
+                    <textarea id="whyJoin" name="whyJoin" rows="4" required></textarea>
+                </div>
+
+                <div class="form-group">
+                    <label for="scenarioBrokenLeg">You respond to a scene where a patient reports a broken leg. Describe how you would assess, treat, and transport the patient. (50 Words Minimum) *</label>
+                    <textarea id="scenarioBrokenLeg" name="scenarioBrokenLeg" rows="5" required></textarea>
+                </div>
+
+                <div class="form-group">
+                    <label for="scenarioPrioritize">You arrive at a scene. A PD officer and a civilian are bleeding out. The civilian is screaming to be revived. In what order do you prioritize care, and why? (40 Words Minimum) *</label>
+                    <textarea id="scenarioPrioritize" name="scenarioPrioritize" rows="5" required></textarea>
+                </div>
+
+                <div class="form-group">
+                    <label for="scenarioChiliad">You are the only EMS on duty and receive a call to Mount Chiliad. What do you do, and how do you ensure the situation is handled safely? *</label>
+                    <textarea id="scenarioChiliad" name="scenarioChiliad" rows="4" required></textarea>
+                </div>
+
+                <div class="form-group">
+                    <label for="scenarioThreat">Scenario: While on patrol, a civilian threatens you with a weapon. How do you respond while staying in character and following EMS protocol? *</label>
+                    <textarea id="scenarioThreat" name="scenarioThreat" rows="4" required></textarea>
+                </div>
+
+                <div class="form-group">
+                    <label for="scenarioRuleBreak">You witness a member of EMS Low Command breaking server or RP rules. How do you handle the situation? *</label>
+                    <textarea id="scenarioRuleBreak" name="scenarioRuleBreak" rows="4" required></textarea>
+                </div>
+
+                <div class="form-group">
+                    <label for="scenarioNoRP">What would you do if someone demands a revive without roleplaying? *</label>
+                    <textarea id="scenarioNoRP" name="scenarioNoRP" rows="4" required></textarea>
+                </div>
+
+                <div class="form-group">
+                    <label for="weaponsPolicy">Are EMS allowed to carry weapons? And Explain why EMS should or shouldn’t carry weapons. *</label>
+                    <textarea id="weaponsPolicy" name="weaponsPolicy" rows="4" required></textarea>
+                </div>
+
+                <div class="form-group">
+                    <p class="question-label">During what times are you allowed to break traffic laws? *</p>
+                    <div class="custom-radio-group">
+                        <label class="custom-radio">
+                            <input type="radio" name="trafficLaws" value="Whenever I feel like it" required>
+                            <span class="radio-card">I can break traffic laws whenever I feel like it</span>
+                        </label>
+                        
+                        <label class="custom-radio">
+                            <input type="radio" name="trafficLaws" value="Responding to an emergency">
+                            <span class="radio-card">I can break traffic laws when responding to an emergency</span>
+                        </label>
+                        
+                        <label class="custom-radio">
+                            <input type="radio" name="trafficLaws" value="Going to get food">
+                            <span class="radio-card">I can break traffic laws when I'm going to get food</span>
+                        </label>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="powergaming">What is powergaming? Give an example. *</label>
+                    <textarea id="powergaming" name="powergaming" rows="3" required></textarea>
+                </div>
+
+                <div class="form-group">
+                    <label for="metagaming">What is metagaming? Give an example. *</label>
+                    <textarea id="metagaming" name="metagaming" rows="3" required></textarea>
+                </div>
+
+                <div class="form-group">
+                    <label for="combatReviving">Explain what “combat reviving” means and give an example of when it would be considered fail RP. *</label>
+                    <textarea id="combatReviving" name="combatReviving" rows="3" required></textarea>
+                </div>
+
+                <div class="form-group">
+                    <label for="nvl">What is NVL/FTVL? Give an example. *</label>
+                    <textarea id="nvl" name="nvl" rows="3" required></textarea>
+                </div>
+
+                <div class="form-group">
+                    <p class="question-label">Are you willing to attend EMS training sessions or ride-alongs if required? *</p>
+                    <div class="custom-radio-group">
+                        <label class="custom-radio">
+                            <input type="radio" name="trainingAttendance" value="Yes" required>
+                            <span class="radio-card">Yes</span>
+                        </label>
+                        
+                        <label class="custom-radio">
+                            <input type="radio" name="trainingAttendance" value="No">
+                            <span class="radio-card">No</span>
+                        </label>
+                    </div>
+                </div>
+
+                <button type="submit" class="submit-btn">Submit Application</button>
+            </form>
+        </section>
+    </main>
+
+    <script>
+        const menuBtn = document.querySelector('.mobile-menu-btn');
+        const navLinks = document.querySelector('.nav-links');
+
+        menuBtn.addEventListener('click', () => {
+            navLinks.classList.toggle('show-menu');
+            if (navLinks.classList.contains('show-menu')) {
+                menuBtn.innerHTML = '✕';
+            } else {
+                menuBtn.innerHTML = '☰';
+            }
+        });
+    </script>
+
+    <script type="module" src="app.js"></script>
+</body>
+</html>

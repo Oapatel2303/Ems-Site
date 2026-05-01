@@ -1,0 +1,415 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Command Dashboard | Seasons RP</title>
+    <link rel="icon" type="image/svg+xml" href="favicon.svg">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body class="dashboard-body">
+
+    <div id="login-view">
+        <a href="index.html" class="back-home-link">← Return to Home</a>
+        
+        <div class="login-box">
+            <h2>🚑 Command Access</h2>
+            <form id="login-form">
+                <input type="email" id="login-email" placeholder="Command Email" required>
+                <input type="password" id="login-password" placeholder="Password" required>
+                <button type="submit" class="submit-btn">Authenticate</button>
+            </form>
+            <p id="login-error" style="color: #e53935; margin-top: 1rem; display: none;">Invalid credentials. Access denied.</p>
+        </div>
+    </div>
+
+    <div id="dashboard-view" style="display: none;">
+        
+        <nav class="command-nav">
+            <div class="nav-brand-group">
+                <h2>🚑 EMS Command Dashboard</h2>
+                <ul class="nav-links" style="display: flex; gap: 1.5rem; list-style: none; margin-left: 2rem; padding: 0;">
+                    <li><a href="index.html" class="back-home-link">Home Site</a></li>
+                    <li><a href="portal.html">Employee Portal</a></li>
+                    <li><a href="roster.html" class="back-home-link" style="color: #43a047;">Public Roster ↗</a></li>
+                </ul>
+            </div>
+            <button id="logout-btn" class="nav-btn">Secure Log Out</button>
+        </nav>
+
+        <div class="dashboard-tabs">
+            <button id="tab-apps" class="tab-btn active" onclick="window.switchTab('apps')">Applications</button>
+            <button id="tab-roster" class="tab-btn" onclick="window.switchTab('roster')">Roster Management</button>
+            <button id="tab-pcr" class="tab-btn" onclick="window.switchTab('pcr')">PCR Database</button>
+        </div>
+
+        <div id="section-apps">
+            
+            <div style="display: flex; justify-content: flex-end; margin-bottom: 15px; padding: 0 1rem;">
+                <input type="text" id="app-search" placeholder="Search applicant, discord, or status..." style="padding: 10px 15px; border-radius: 6px; border: 1px solid #333; background: #0a0a0a; color: white; width: 100%; max-width: 300px;">
+            </div>
+
+            <main class="kanban-board">
+                <div class="kanban-column" id="col-new">
+                    <div class="column-header">
+                        <h3>New Applications</h3>
+                        <span class="count-badge" id="count-new">0</span>
+                    </div>
+                    <div class="column-content" id="content-new"></div>
+                </div>
+
+                <div class="kanban-column" id="col-review">
+                    <div class="column-header">
+                        <h3>Under Review / Interview</h3>
+                        <span class="count-badge" id="count-review">0</span>
+                    </div>
+                    <div class="column-content" id="content-review"></div>
+                </div>
+
+                <div class="kanban-column" id="col-decided">
+                    <div class="column-header">
+                        <h3>Accepted / Rejected</h3>
+                    </div>
+                    <div class="column-content" id="content-decided"></div>
+                </div>
+            </main>
+        </div>
+
+        <div id="section-roster" style="display: none;">
+            
+            <div class="admin-panel" style="border-color: #fb8c00; background-color: rgba(251, 140, 0, 0.05);">
+                <h3 style="color: #fb8c00; border-bottom-color: #fb8c00;">⚠️ Bulk Roster Import (CSV Upload)</h3>
+                <p style="color: #ccc; margin-bottom: 1rem;">Upload your <strong>.csv</strong> roster file directly. (In Google Sheets, click <em>File > Download > Comma Separated Values (.csv)</em>).</p>
+                <input type="file" id="csv-file-input" accept=".csv" style="background: #0a0a0a; color: #fff; padding: 1rem; border-radius: 6px; width: 100%; border: 1px solid #333; margin-bottom: 1rem;">
+                <button id="btn-csv-import" class="btn-primary" style="background-color: #fb8c00;">Read File & Import Roster</button>
+            </div>
+
+            <div class="admin-panel">
+                <h3>➕ Add New Medic</h3>
+                <form id="add-medic-form" class="roster-form">
+                    <div class="form-grid">
+                        <div style="display: flex; flex-direction: column; gap: 4px;">
+                            <label style="color: #fb8c00; font-size: 0.75rem; font-weight: bold; padding-left: 2px;">Character Name</label>
+                            <input type="text" id="r-name" placeholder="Full Character Name" required>
+                        </div>
+
+                        <div style="display: flex; flex-direction: column; gap: 4px;">
+                            <label style="color: #fb8c00; font-size: 0.75rem; font-weight: bold; padding-left: 2px;">Callsign</label>
+                            <input type="text" id="r-callsign" placeholder="Callsign (e.g., COM - 001)" required>
+                        </div>
+                        
+                        <div style="display: flex; flex-direction: column; gap: 4px;">
+                            <label style="color: #fb8c00; font-size: 0.75rem; font-weight: bold; padding-left: 2px;">Rank / Position</label>
+                            <select id="r-position" required>
+                                <option value="" disabled selected>Select Rank...</option>
+                                <optgroup label="High Command">
+                                    <option value="Commissioner">Commissioner</option>
+                                    <option value="Human Resources">Human Resourcesr</option>
+                                    <option value="Assistant Director">Assistant Director</option>
+                                    <option value="Director of Operations">Director of Operations</option>
+                                    <option value="Asst. Department Director">Asst. Department Director</option>
+                                    <option value="Head of Department">Head of Department</option>
+                                </optgroup>
+                                <optgroup label="Directors">
+                                    <option value="Director of Doctors">Director of Doctors</option>
+                                    <option value="S&R Director">S&R Director</option>
+                                    <option value="Division Director">Division Director</option>
+                                    <option value="H.A.L.O Director">H.A.L.O Director</option>
+                                    <option value="Training Director">Training Director</option>
+                                </optgroup>
+                                <optgroup label="Supervisors & Leads">
+                                    <option value="District Manager">District Manager</option>
+                                    <option value="Shift Lead">Shift Lead</option>
+                                    <option value="Field Training Officer">Field Training Officer</option>
+                                </optgroup>
+                                <optgroup label="Medical Doctors">
+                                    <option value="Consultant/Attending Physician">Consultant/Attending Physician</option>
+                                    <option value="Fellow Doctor">Fellow Doctor</option>
+                                    <option value="Chief Resident">Chief Resident</option>
+                                    <option value="Senior Resident">Senior Resident</option>
+                                    <option value="Resident">Resident</option>
+                                    <option value="Junior Resident">Junior Resident</option>
+                                    <option value="Intern">Intern</option>
+                                    <option value="Medical Student">Medical Student</option>
+                                </optgroup>
+                                <optgroup label="Paramedics">
+                                    <option value="Critical Care Paramedic">Critical Care Paramedic</option>
+                                    <option value="Advanced Care Paramedic">Advanced Care Paramedic</option>
+                                    <option value="Primary Care Paramedic">Primary Care Paramedic</option>
+                                    <option value="Paramedic">Paramedic</option>
+                                </optgroup>
+                                <optgroup label="EMTs & Responders">
+                                    <option value="Advanced Medical Technician">Advanced Medical Technician</option>
+                                    <option value="Medical Technician">Medical Technician</option>
+                                    <option value="Emergency Medical Responder">Emergency Medical Responder</option>
+                                    <option value="Trainee">Trainee</option>
+                                </optgroup>
+                            </select>
+                        </div>
+                        
+                        <div style="display: flex; flex-direction: column; gap: 4px;">
+                            <label style="color: #fb8c00; font-size: 0.75rem; font-weight: bold; padding-left: 2px;">Duty Status</label>
+                            <select id="r-status" required>
+                                <option value="Active">Active</option>
+                                <option value="LOA">LOA</option>
+                                <option value="Inactive">Inactive</option>
+                            </select>
+                        </div>
+                        
+                        <div style="display: flex; flex-direction: column; gap: 4px;">
+                            <label style="color: #fb8c00; font-size: 0.75rem; font-weight: bold; padding-left: 2px;">Timezone</label>
+                            <input type="text" id="r-timezone" placeholder="Timezone (e.g., EST)" required>
+                        </div>
+
+                        <div style="display: flex; flex-direction: column; gap: 4px;">
+                            <label style="color: #fb8c00; font-size: 0.75rem; font-weight: bold; padding-left: 2px;">Strikes</label>
+                            <input type="number" id="r-strikes" placeholder="Strikes (Default: 0)" value="0" min="0">
+                        </div>
+
+                        <div style="display: flex; flex-direction: column; gap: 4px;">
+                            <label style="color: #fb8c00; font-size: 0.75rem; font-weight: bold; padding-left: 2px;">Join Date</label>
+                            <input type="text" id="r-join" placeholder="Join Date (DD/MM/YYYY)" required>
+                        </div>
+
+                        <div style="display: flex; flex-direction: column; gap: 4px;">
+                            <label style="color: #fb8c00; font-size: 0.75rem; font-weight: bold; padding-left: 2px;">Last Promoted</label>
+                            <input type="text" id="r-promoted" placeholder="Last Promoted (DD/MM/YYYY)" required>
+                        </div>
+
+                        <div style="display: flex; flex-direction: column; gap: 4px;">
+                            <label style="color: #fb8c00; font-size: 0.75rem; font-weight: bold; padding-left: 2px;">Discord Name</label>
+                            <input type="text" id="r-discord" placeholder="Discord Name" required>
+                        </div>
+
+                        <div style="display: flex; flex-direction: column; gap: 4px;">
+                            <label style="color: #fb8c00; font-size: 0.75rem; font-weight: bold; padding-left: 2px;">Discord ID</label>
+                            <input type="text" id="r-discordId" placeholder="Discord ID">
+                        </div>
+
+                        <div style="display: flex; flex-direction: column; gap: 4px;">
+                            <label style="color: #fb8c00; font-size: 0.75rem; font-weight: bold; padding-left: 2px;">Divisions</label>
+                            <input type="text" id="r-divisions" placeholder="Comma separated, e.g., HR, FTO">
+                        </div>
+
+                        <div style="display: flex; flex-direction: column; gap: 4px;">
+                            <label style="color: #fb8c00; font-size: 0.75rem; font-weight: bold; padding-left: 2px;">Certifications</label>
+                            <input type="text" id="r-certs" placeholder="SAR, HALO, HSRS, MASS">
+                        </div>
+                    </div>
+                    
+                    <div class="form-footer">
+                        <label class="checkbox-label">
+                            <input type="checkbox" id="r-hc"> <span>Is High Command?</span>
+                        </label>
+                        <input type="text" id="r-notes" placeholder="Admin Notes (Hidden from public)" style="flex-grow: 1; margin-left: 1rem;">
+                        <button type="submit" class="btn-primary" style="margin-left: 1rem;">Add to Roster</button>
+                    </div>
+                </form>
+            </div>
+
+            <div class="admin-panel">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; flex-wrap: wrap; gap: 10px;">
+                    <h3 style="margin: 0;">📋 Master Roster Directory</h3>
+                    <input type="text" id="roster-search" placeholder="Search name, callsign, or rank..." style="padding: 10px 15px; border-radius: 6px; border: 1px solid #333; background: #0a0a0a; color: white; width: 100%; max-width: 300px;">
+                </div>
+                
+                <div class="table-responsive">
+                    <table class="admin-table">
+                        <thead>
+                            <tr>
+                                <th>Callsign</th>
+                                <th>Name</th>
+                                <th>Position</th>
+                                <th>Status</th>
+                                <th>Strikes</th>
+                                <th>Discord</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="roster-table-body">
+                            </tbody>
+                    </table>
+                </div>
+            </div>
+
+        </div>
+
+
+        <div id="edit-modal" class="modal-overlay" style="display: none;">
+            <div class="modal-content admin-panel" style="margin: 0; border-color: #fb8c00; max-width: 700px;">
+                <h3 id="edit-modal-title" style="color: #fb8c00; border-bottom-color: #fb8c00;">Edit Medic</h3>
+                <form id="edit-medic-form" class="roster-form">
+                    <input type="hidden" id="edit-doc-id">
+                    
+                    <div class="form-grid">
+                        
+                        <div style="display: flex; flex-direction: column; gap: 4px;">
+                            <label style="color: #fb8c00; font-size: 0.75rem; font-weight: bold; padding-left: 2px;">Character Name</label>
+                            <input type="text" id="edit-name" placeholder="Character Name" required>
+                        </div>
+
+                        <div style="display: flex; flex-direction: column; gap: 4px;">
+                            <label style="color: #fb8c00; font-size: 0.75rem; font-weight: bold; padding-left: 2px;">Callsign</label>
+                            <input type="text" id="edit-callsign" placeholder="Callsign" required>
+                        </div>
+                        
+                        <div style="display: flex; flex-direction: column; gap: 4px;">
+                            <label style="color: #fb8c00; font-size: 0.75rem; font-weight: bold; padding-left: 2px;">Rank / Position</label>
+                            <select id="edit-position" required>
+                                <optgroup label="High Command">
+                                    <option value="Commissioner">Commissioner</option>
+                                    <option value="Human Resources">Human Resources</option>
+                                    <option value="Assistant Director">Assistant Director</option>
+                                    <option value="Director of Operations">Director of Operations</option>
+                                    <option value="Asst. Department Director">Asst. Department Director</option>
+                                    <option value="Head of Department">Head of Department</option>
+                                </optgroup>
+                                <optgroup label="Directors">
+                                    <option value="Director of Doctors">Director of Doctors</option>
+                                    <option value="S&R Director">S&R Director</option>
+                                    <option value="Division Director">Division Director</option>
+                                    <option value="H.A.L.O Director">H.A.L.O Director</option>
+                                    <option value="Training Director">Training Director</option>
+                                </optgroup>
+                                <optgroup label="Supervisors & Leads">
+                                    <option value="District Manager">District Manager</option>
+                                    <option value="Shift Lead">Shift Lead</option>
+                                    <option value="Field Training Officer">Field Training Officer</option>
+                                </optgroup>
+                                <optgroup label="Medical Doctors">
+                                    <option value="Consultant/Attending Physician">Consultant/Attending Physician</option>
+                                    <option value="Fellow Doctor">Fellow Doctor</option>
+                                    <option value="Chief Resident">Chief Resident</option>
+                                    <option value="Senior Resident">Senior Resident</option>
+                                    <option value="Resident">Resident</option>
+                                    <option value="Junior Resident">Junior Resident</option>
+                                    <option value="Intern">Intern</option>
+                                    <option value="Medical Student">Medical Student</option>
+                                </optgroup>
+                                <optgroup label="Paramedics">
+                                    <option value="Critical Care Paramedic">Critical Care Paramedic</option>
+                                    <option value="Advanced Care Paramedic">Advanced Care Paramedic</option>
+                                    <option value="Primary Care Paramedic">Primary Care Paramedic</option>
+                                    <option value="Paramedic">Paramedic</option>
+                                </optgroup>
+                                <optgroup label="EMTs & Responders">
+                                    <option value="Advanced Medical Technician">Advanced Medical Technician</option>
+                                    <option value="Medical Technician">Medical Technician</option>
+                                    <option value="Emergency Medical Responder">Emergency Medical Responder</option>
+                                    <option value="Trainee">Trainee</option>
+                                </optgroup>
+                            </select>
+                        </div>
+                        
+                        <div style="display: flex; flex-direction: column; gap: 4px;">
+                            <label style="color: #fb8c00; font-size: 0.75rem; font-weight: bold; padding-left: 2px;">Duty Status</label>
+                            <select id="edit-status" required>
+                                <option value="Active">Active</option>
+                                <option value="LOA">LOA</option>
+                                <option value="Inactive">Inactive</option>
+                            </select>
+                        </div>
+                        
+                        <div style="display: flex; flex-direction: column; gap: 4px;">
+                            <label style="color: #fb8c00; font-size: 0.75rem; font-weight: bold; padding-left: 2px;">Timezone</label>
+                            <input type="text" id="edit-timezone" placeholder="Timezone">
+                        </div>
+
+                        <div style="display: flex; flex-direction: column; gap: 4px;">
+                            <label style="color: #fb8c00; font-size: 0.75rem; font-weight: bold; padding-left: 2px;">Strikes</label>
+                            <input type="number" id="edit-strikes" placeholder="Strikes" min="0">
+                        </div>
+
+                        <div style="display: flex; flex-direction: column; gap: 4px;">
+                            <label style="color: #fb8c00; font-size: 0.75rem; font-weight: bold; padding-left: 2px;">Join Date</label>
+                            <input type="text" id="edit-join" placeholder="DD/MM/YYYY">
+                        </div>
+
+                        <div style="display: flex; flex-direction: column; gap: 4px;">
+                            <label style="color: #fb8c00; font-size: 0.75rem; font-weight: bold; padding-left: 2px;">Last Promoted</label>
+                            <input type="text" id="edit-promoted" placeholder="DD/MM/YYYY">
+                        </div>
+
+                        <div style="display: flex; flex-direction: column; gap: 4px;">
+                            <label style="color: #fb8c00; font-size: 0.75rem; font-weight: bold; padding-left: 2px;">Discord Name</label>
+                            <input type="text" id="edit-discord" placeholder="Discord Name">
+                        </div>
+
+                        <div style="display: flex; flex-direction: column; gap: 4px;">
+                            <label style="color: #fb8c00; font-size: 0.75rem; font-weight: bold; padding-left: 2px;">Discord ID</label>
+                            <input type="text" id="edit-discordId" placeholder="Discord ID">
+                        </div>
+
+                        <div style="display: flex; flex-direction: column; gap: 4px;">
+                            <label style="color: #fb8c00; font-size: 0.75rem; font-weight: bold; padding-left: 2px;">Divisions & Certs</label>
+                            <input type="text" id="edit-divisions" placeholder="Comma separated">
+                        </div>
+
+                        <div style="display: flex; flex-direction: column; gap: 4px;">
+                            <label style="color: #fb8c00; font-size: 0.75rem; font-weight: bold; padding-left: 2px;">Certifications</label>
+                            <input type="text" id="edit-certs" placeholder="SAR, HALO, HSRS, MASS">
+                        </div>
+                    </div>
+                    
+                    <div class="form-footer" style="flex-wrap: wrap;">
+                        <label class="checkbox-label" style="width: 100%; margin-bottom: 1rem;">
+                            <input type="checkbox" id="edit-hc"> <span>Is High Command?</span>
+                        </label>
+                        <input type="text" id="edit-notes" placeholder="Admin Notes (Hidden from public)" style="width: 100%; margin-bottom: 1rem;">
+                        
+                        <div style="width: 100%; display: flex; justify-content: space-between; align-items: center; border-top: 1px dashed #333; padding-top: 1rem;">
+                            <button type="button" class="btn-primary" style="background-color: #e53935;" onclick="window.deleteMedic()">🗑️ Delete Medic</button>
+                            
+                            <div style="display: flex; gap: 1rem;">
+                                <button type="button" class="btn-secondary" onclick="window.closeEditModal()">Cancel</button>
+                                <button type="submit" class="btn-primary" style="background-color: #fb8c00;">Save All Changes</button>
+                            </div>
+                        </div> 
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <div id="section-pcr" style="display: none;">
+    <div class="admin-panel">
+        <h3>📋 PCR Database</h3>
+        <table class="admin-table">
+            <thead>
+                <tr>
+                    <th>Date</th>
+                    <th>Patient</th>
+                    <th>Primary Medic</th>
+                    <th>Priority</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody id="pcr-table-body"></tbody>
+        </table>
+    </div>
+
+    <div id="pcr-modal" class="modal-overlay" style="display: none;">
+            <div class="modal-content admin-panel" style="max-width: 600px;">
+                <h3 style="color: #fb8c00;">Official ePCR Report</h3>
+                
+                <p><strong>Patient:</strong> <span id="v-patient"></span></p>
+                <p><strong>Primary Medic:</strong> <span id="v-medic"></span></p>
+                <p><strong>GCS Total:</strong> <span id="v-gcs"></span></p>
+                
+                <div class="body-diagram-container" style="margin-top: 15px;">
+                    <img id="modal-body-image" alt="Body Diagram" style="width: 100%; opacity: 0.8; display: block;" src="data:image/svg+xml;utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 200' fill='none' stroke='%23666' stroke-width='2'%3E%3Ctext x='50' y='20' fill='%23666' font-family='sans-serif' font-size='12' text-anchor='middle' stroke='none'%3EFRONT%3C/text%3E%3Ccircle cx='50' cy='40' r='12'/%3E%3Cpath d='M30 60 Q50 50 70 60 L75 110 L65 110 L60 180 L40 180 L35 110 L25 110 Z'/%3E%3Cline x1='50' y1='110' x2='50' y2='180'/%3E%3Ctext x='150' y='20' fill='%23666' font-family='sans-serif' font-size='12' text-anchor='middle' stroke='none'%3EBACK%3C/text%3E%3Ccircle cx='150' cy='40' r='12'/%3E%3Cpath d='M130 60 Q150 50 170 60 L175 110 L165 110 L160 180 L140 180 L135 110 L125 110 Z'/%3E%3Cline x1='150' y1='110' x2='150' y2='180'/%3E%3C/svg%3E">
+                    <canvas id="modal-body-canvas"></canvas>
+                </div>
+
+                <p style="margin-top: 15px;"><strong>Narrative:</strong></p>
+                <div id="v-narrative" style="background: #0a0a0a; padding: 10px; border-radius: 6px; border: 1px solid #333;"></div>
+
+                <button type="button" class="btn-secondary" onclick="document.getElementById('pcr-modal').style.display = 'none'" style="width: 100%; margin-top: 15px;">Close Report</button>
+            </div>
+        </div>
+    </div>
+
+    </div>
+
+    <script type="module" src="command.js"></script>
+</body>
+</html>
