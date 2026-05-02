@@ -365,9 +365,14 @@ document.getElementById('employee-login-form')?.addEventListener('submit', async
             return; 
         }
 
+        // 1. Declare empty "memory" variables OUTSIDE the loop
         let loginSuccess = false;
         let employeeName = "";
         let employeeCerts = [];
+        let savedCallsign = "";
+        let savedDiscordName = "";
+        let savedDiscordId = "";
+        let savedStrikes = 0;
 
         querySnapshot.forEach((doc) => {
             const data = doc.data();
@@ -375,9 +380,15 @@ document.getElementById('employee-login-form')?.addEventListener('submit', async
             const extractedPIN = dbCallsign.replace(/\D/g, ''); 
 
             if (extractedPIN === pinInput) {
+                // 2. Save the data to our outside variables before the loop ends
                 loginSuccess = true;
                 employeeName = data.name;
                 employeeCerts = data.certs || [];
+                savedCallsign = dbCallsign;
+                savedDiscordName = data.discordName || '';
+                savedDiscordId = data.discordId || '';
+                savedStrikes = data.strikes || 0;
+                
                 sessionStorage.setItem('activeEmployeeCerts', JSON.stringify(employeeCerts)); 
             }
         });
@@ -386,8 +397,12 @@ document.getElementById('employee-login-form')?.addEventListener('submit', async
             document.getElementById('employee-name-display').textContent = employeeName;
             document.getElementById('welcome-name').textContent = employeeName;
             
+            // 3. Use the safely stored variables
             sessionStorage.setItem('activeEmployeeName', employeeName);
-            sessionStorage.setItem('activeEmployeeCallsign', pinInput);
+            sessionStorage.setItem('activeEmployeeCallsign', savedCallsign);
+            sessionStorage.setItem('activeEmployeeDiscord', savedDiscordName);
+            sessionStorage.setItem('activeEmployeeDiscordId', savedDiscordId);
+            sessionStorage.setItem('activeEmployeeStrikes', savedStrikes);
             
             // Render certs immediately upon login
             window.renderMyCerts(employeeCerts);
@@ -751,5 +766,72 @@ document.getElementById('pcr-form')?.addEventListener('submit', async (e) => {
     } catch (error) {
         console.error("PCR Submit Error:", error);
         alert("Failed to submit PCR. Make sure Firebase Rules allow writes to 'pcr_reports'.");
+    }
+});
+
+// ====================
+// FTO PROMOTIONAL EXAM
+
+const ftoContainer = document.getElementById('fto-app-container');
+
+document.getElementById('start-fto-btn')?.addEventListener('click', () => {
+    hubMenu.style.display = 'none';
+    ftoContainer.style.display = 'block';
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+});
+
+document.getElementById('cancel-fto-btn')?.addEventListener('click', () => {
+    document.getElementById('fto-app-form').reset();
+    ftoContainer.style.display = 'none';
+    hubMenu.style.display = 'block';
+});
+
+document.getElementById('fto-app-form')?.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    
+    const submitBtn = document.getElementById('submit-fto-btn');
+    submitBtn.disabled = true;
+    submitBtn.textContent = "Submitting...";
+
+    // 1. Gather form data
+    const formData = new FormData(e.target);
+    const appData = Object.fromEntries(formData.entries());
+    
+    // 2. Inject invisible Session Data
+    appData.medicName = sessionStorage.getItem('activeEmployeeName') || "Unknown";
+    appData.callsign = sessionStorage.getItem('activeEmployeeCallsign') || "Unknown";
+    appData.discordName = sessionStorage.getItem('activeEmployeeDiscord') || "Unknown";
+    appData.discordId = sessionStorage.getItem('activeEmployeeDiscordId') || "Unknown";
+    appData.strikes = sessionStorage.getItem('activeEmployeeStrikes') || 0;
+    appData.status = 'Pending';
+    appData.timestamp = new Date().toISOString();
+
+    try {
+        await addDoc(collection(db, "fto_applications"), appData);
+        
+        // 3. Webhook to Command Channel
+        const ftoWebhookUrl = "https://discord.com/api/webhooks/1499957508251586681/1lkUCnv2wmmAvOmX5V7s3Y_hTfxJuV6sAlaMjzgSSze-8HOraT0FOwchbWLJJKRu80MQ"; // <-- INSERT WEBHOOK
+        const discordMsg = {
+            content: "<@&1369735669760655512> <@&1429239658474246225> A new FTO Application has been submitted!",
+            embeds: [{
+                title: `⭐ New FTO Application: ${appData.medicName}`,
+                description: `**Callsign:** ${appData.callsign}\n**Strikes:** ${appData.strikes}\n\nReview this application on the Command Dashboard Promotions tab.`,
+                color: 16485376
+            }]
+        };
+
+        await fetch(ftoWebhookUrl, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(discordMsg) });
+
+        alert("✅ Your FTO Application has been securely transmitted to the Training Director.");
+        e.target.reset();
+        ftoContainer.style.display = 'none';
+        hubMenu.style.display = 'block';
+
+    } catch (error) {
+        console.error("FTO Submit Error:", error);
+        alert("Failed to submit. Check Firebase rules for 'fto_applications'.");
+    } finally {
+        submitBtn.disabled = false;
+        submitBtn.textContent = "Submit Application";
     }
 });

@@ -78,6 +78,13 @@
                             <button id="start-exam-btn" class="btn-primary" style="width: 100%; margin-top: 15px;">Begin Examination</button>
                         </div>
 
+                        <div class="portal-card">
+                            <div class="card-icon gold"><i class="fas fa-star"></i></div>
+                            <h3>FTO Promotional Exam</h3>
+                            <p>Apply to become a Field Training Officer. Your character records will be automatically attached.</p>
+                            <button id="start-fto-btn" class="btn-primary" style="width: 100%; margin-top: 15px; background-color: #fb8c00;">Begin Application</button>
+                        </div>
+
                         <div class="portal-card disabled">
                             <div class="card-icon gold"><i class="fas fa-ambulance"></i></div>
                             <h3>EVOC Training</h3>
@@ -95,6 +102,63 @@
                     <form id="exam-form">
                         <div id="question-list"></div>
                         <button type="submit" id="submit-exam-btn" class="btn-submit">Submit Final Answers</button>
+                    </form>
+                </div>
+
+                <div id="fto-app-container" style="display: none; width: 100%; max-width: 800px; margin: 0 auto;">
+                    <div class="exam-header" style="margin-bottom: 30px; border-bottom: 2px solid #fb8c00; padding-bottom: 15px;">
+                        <h2 style="color: #fb8c00;">Field Training Officer Application</h2>
+                        <p style="color: #888;">Complete all questions below. Your Discord ID, Callsign, Rank, and Strike count will be automatically attached to this packet.</p>
+                    </div>
+                    
+                    <form id="fto-app-form" class="admin-panel" style="border-color: #fb8c00;">
+                        
+                        <div class="form-group">
+                            <label>Why do you want to be a Field Training Officer? (Max 50 Words)</label>
+                            <textarea name="q_why" rows="3" required></textarea>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label>What is the responsibility of being a Field Training Officer? (Max 50 Words)</label>
+                            <textarea name="q_resp" rows="3" required></textarea>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label>What makes you stand out better than other applicants, why should we pick you first? (Max 50 Words)</label>
+                            <textarea name="q_standout" rows="3" required></textarea>
+                        </div>
+
+                        <div class="form-group">
+                            <label>What are your current strengths and how would that help us to show your excellent interest for the Field Training Officer Application? (Max 100 Words)</label>
+                            <textarea name="q_strength" rows="4" required></textarea>
+                        </div>
+
+                        <h3 style="color: #fb8c00; margin-top: 20px; border-bottom: 1px solid #333; padding-bottom: 5px;">Scenarios</h3>
+
+                        <div class="form-group">
+                            <label>Scenario 1: A Police Officer radios for a supervisor and you are the only active one currently on. They want to file a complaint against one of your EMS personnel. What would you do and how would you handle this? (Max 70 Words)</label>
+                            <textarea name="s_police" rows="4" required></textarea>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Scenario 2: You're currently watching a Junior Field Training Officer doing their interview and training, and they make a couple of mistakes. How would you handle this?</label>
+                            <textarea name="s_junior" rows="4" required></textarea>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Scenario 3: You arrive as a supervisor to a mass casualty and you see some paramedics not following commands and not being safe in the middle of the event. What would you do about this, how would you handle them, and what punishment would they receive? (Max 100 Words)</label>
+                            <textarea name="s_mci" rows="4" required></textarea>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Scenario 4: You receive a call on the MDT. As a Supervisor on scene with other EMTs, you see some EMS personnel driving a vehicle they are not allowed to drive. What would you do, how would you handle this, and what punishment would they receive?</label>
+                            <textarea name="s_vehicle" rows="4" required></textarea>
+                        </div>
+
+                        <div style="display: flex; gap: 15px; margin-top: 20px;">
+                            <button type="button" id="cancel-fto-btn" class="btn-secondary" style="flex: 1;">Cancel</button>
+                            <button type="submit" id="submit-fto-btn" class="btn-primary" style="flex: 2; background-color: #fb8c00;">Submit Application</button>
+                        </div>
                     </form>
                 </div>
 

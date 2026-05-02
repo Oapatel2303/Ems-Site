@@ -11,7 +11,7 @@ function escapeHTML(str) {
 }
 
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-import { getFirestore, collection, getDocs, doc, updateDoc, addDoc, deleteDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+import { getFirestore, collection, getDocs, doc, updateDoc, addDoc, deleteDoc, query, where } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 import { getAuth, signInWithEmailAndPassword, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
 
 const firebaseConfig = {
@@ -291,7 +291,8 @@ window.switchTab = function(tabName) {
     const tabs = {
         'apps': { btn: document.getElementById('tab-apps'), sec: document.getElementById('section-apps'), load: loadApplications },
         'roster': { btn: document.getElementById('tab-roster'), sec: document.getElementById('section-roster'), load: loadRoster },
-        'pcr': { btn: document.getElementById('tab-pcr'), sec: document.getElementById('section-pcr'), load: loadPCRs }
+        'pcr': { btn: document.getElementById('tab-pcr'), sec: document.getElementById('section-pcr'), load: loadPCRs },
+        'promotions': { btn: document.getElementById('tab-promotions'), sec: document.getElementById('section-promotions'), load: loadPromotions } // ADD THIS LINE
     };
 
     // First, hide EVERYTHING and remove active classes
@@ -730,3 +731,118 @@ window.viewPCR = function(data) {
         }
     }, 50);
 };
+
+// ====================
+// FTO PROMOTIONS SYSTEM
+
+async function loadPromotions() {
+    const grid = document.getElementById('promotions-grid');
+    grid.innerHTML = '<p style="color: #888; width: 100%; text-align: center;">Loading applications...</p>';
+    
+    try {
+        const q = query(collection(db, "fto_applications"), where("status", "==", "Pending"));
+        const querySnapshot = await getDocs(q);
+        grid.innerHTML = '';
+        
+        if (querySnapshot.empty) {
+            grid.innerHTML = '<p style="color: #888; width: 100%; text-align: center;">No pending FTO applications.</p>';
+            return;
+        }
+
+        querySnapshot.forEach((docSnap) => {
+            const data = docSnap.data();
+            const strikeStyling = data.strikes > 0 ? `color: #e53935; font-weight: bold;` : `color: #43a047;`;
+            
+            const card = document.createElement('div');
+            card.className = 'medic-card';
+            card.style.borderColor = '#fb8c00';
+            card.innerHTML = `
+                <div class="medic-header">
+                    <h3 style="color: #fb8c00;">${escapeHTML(data.medicName)}</h3>
+                </div>
+                <h2>${escapeHTML(data.callsign)}</h2>
+                <p style="color: #ccc; margin-bottom: 5px;">Discord: ${escapeHTML(data.discordName)}</p>
+                <p style="margin-bottom: 15px;">Strikes: <span style="${strikeStyling}">${escapeHTML(data.strikes)}</span></p>
+                <button class="btn-primary" style="width: 100%; background-color: #fb8c00;" onclick="window.viewFTO(${escapeHTML(JSON.stringify({id: docSnap.id, ...data}))})">Review Packet</button>
+            `;
+            grid.appendChild(card);
+        });
+    } catch (error) {
+        console.error("Promotions Load Error:", error);
+        grid.innerHTML = '<p style="color: red;">Failed to load promotions.</p>';
+    }
+}
+
+let activeFTOAppId = null;
+let activeFTODiscordId = null;
+
+window.viewFTO = function(data) {
+    activeFTOAppId = data.id;
+    activeFTODiscordId = data.discordId;
+
+    document.getElementById('f-name').textContent = data.medicName;
+    document.getElementById('f-callsign').textContent = data.callsign;
+    document.getElementById('f-discord').textContent = data.discordId;
+    document.getElementById('f-strikes').textContent = data.strikes;
+
+    const answersDiv = document.getElementById('f-answers');
+    answersDiv.innerHTML = `
+        <h4 style="color: #fb8c00; margin-top: 15px;">Why do you want to be an FTO?</h4><p>${escapeHTML(data.q_why)}</p>
+        <h4 style="color: #fb8c00; margin-top: 15px;">Responsibilities of an FTO:</h4><p>${escapeHTML(data.q_resp)}</p>
+        <h4 style="color: #fb8c00; margin-top: 15px;">What makes you stand out:</h4><p>${escapeHTML(data.q_standout)}</p>
+        <h4 style="color: #fb8c00; margin-top: 15px;">Current strengths:</h4><p>${escapeHTML(data.q_strength)}</p>
+        
+        <h4 style="color: #fb8c00; margin-top: 15px; border-top: 1px dashed #333; padding-top: 10px;">Scenario 1 (Police Complaint):</h4><p>${escapeHTML(data.s_police)}</p>
+        <h4 style="color: #fb8c00; margin-top: 15px;">Scenario 2 (Junior Mistakes):</h4><p>${escapeHTML(data.s_junior)}</p>
+        <h4 style="color: #fb8c00; margin-top: 15px;">Scenario 3 (MCI Safety):</h4><p>${escapeHTML(data.s_mci)}</p>
+        <h4 style="color: #fb8c00; margin-top: 15px;">Scenario 4 (Vehicle Rules):</h4><p>${escapeHTML(data.s_vehicle)}</p>
+    `;
+
+    document.getElementById('fto-modal').style.display = 'flex';
+};
+
+async function decideFTO(decision) {
+    if (!activeFTOAppId) return;
+
+    let reasonText = "";
+    const userInput = prompt(`(Optional) Enter a reason for marking this FTO application as ${decision}:`);
+    if (userInput === null) return; // Cancelled
+    reasonText = userInput.trim();
+    
+    try {
+        const updateData = { status: decision, notified: false }; // notified: false is the trigger for your bot!
+        if (reasonText !== "") updateData.reason = reasonText;
+
+        // 1. Update Firebase (This instantly wakes up your custom Discord Bot)
+        await updateDoc(doc(db, "fto_applications", activeFTOAppId), updateData);
+        
+        // 2. Send the Public Log to your Command Channel
+        const ftoChannelWebhookUrl = "https://discord.com/api/webhooks/1499957508251586681/1lkUCnv2wmmAvOmX5V7s3Y_hTfxJuV6sAlaMjzgSSze-8HOraT0FOwchbWLJJKRu80MQ"; 
+        const embedColor = decision === 'Accepted' ? 4431943 : 15158332;
+
+        const discordMessage = {
+            "embeds": [{
+                "title": `⭐ FTO Application ${decision.toUpperCase()}`,
+                "description": `The FTO application for **${document.getElementById('f-name').textContent}** has been marked as ${decision}.`,
+                "color": embedColor
+            }]
+        };
+
+        if (reasonText !== "") {
+            discordMessage.embeds[0].fields = [{ "name": "Command Note:", "value": reasonText }];
+        }
+
+        await fetch(ftoChannelWebhookUrl, { method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify(discordMessage) });
+
+        alert(`✅ Application ${decision} logged. The bot is sending the DM now!`);
+        document.getElementById('fto-modal').style.display = 'none';
+        loadPromotions(); // Refresh list
+
+    } catch (error) {
+        console.error("FTO Decision Error:", error);
+        alert("Failed to process decision. Check console.");
+    }
+}
+
+document.getElementById('btn-fto-accept')?.addEventListener('click', () => decideFTO('Accepted'));
+document.getElementById('btn-fto-reject')?.addEventListener('click', () => decideFTO('Rejected'));
