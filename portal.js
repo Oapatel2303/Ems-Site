@@ -559,7 +559,7 @@ document.getElementById('exam-form')?.addEventListener('submit', async (e) => {
     });
 
     const finalPercent = Math.round((score / totalQuestions) * 100);
-    const passed = finalPercent >= 80;
+    const passed = finalPercent >= 60;
     const medicName = sessionStorage.getItem('activeEmployeeName') || "Unknown Medic";
     const callsign = sessionStorage.getItem('activeEmployeeCallsign') || "000";
 
